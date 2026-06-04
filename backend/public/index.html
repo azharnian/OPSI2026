@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Air Monitor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Realtime SSE</p>
+          <h1>Air Monitor</h1>
+        </div>
+        <div class="connection" id="connection">
+          <span class="dot"></span>
+          <span id="connectionText">Menghubungkan</span>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Nilai sensor terbaru">
+        <article class="metric metric-nh3">
+          <div>
+            <p>NH3</p>
+            <strong><span id="nh3Value">--</span> ppm</strong>
+          </div>
+          <span id="nh3Status">Menunggu data</span>
+        </article>
+        <article class="metric metric-co2">
+          <div>
+            <p>CO2</p>
+            <strong><span id="co2Value">--</span> ppm</strong>
+          </div>
+          <span id="co2Status">Menunggu data</span>
+        </article>
+        <article class="metric">
+          <div>
+            <p>Update terakhir</p>
+            <strong id="lastSeen">--</strong>
+          </div>
+          <span id="readingCount">0 data terbaca</span>
+        </article>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Live Trend</p>
+            <h2>Riwayat pembacaan</h2>
+          </div>
+          <button id="clearChart" type="button">Reset tampilan</button>
+        </div>
+        <canvas id="chart" width="1100" height="360" aria-label="Grafik pembacaan sensor"></canvas>
+        <div class="legend">
+          <span><i class="line nh3"></i>NH3</span>
+          <span><i class="line co2"></i>CO2</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Statistik</p>
+              <h2>Ringkasan</h2>
+            </div>
+          </div>
+          <div class="summary">
+            <div><span>Total</span><strong id="summaryCount">--</strong></div>
+            <div><span>Rata-rata NH3</span><strong id="summaryNh3">--</strong></div>
+            <div><span>Rata-rata CO2</span><strong id="summaryCo2">--</strong></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Log</p>
+              <h2>Data terbaru</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>NH3</th>
+                  <th>CO2</th>
+                </tr>
+              </thead>
+              <tbody id="readingRows">
+                <tr>
+                  <td colspan="3">Belum ada data.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

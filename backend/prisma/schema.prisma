@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AirReading {
+  id        Int      @id @default(autoincrement())
+  nh3Ppm    Float    @map("nh3_ppm")
+  co2Ppm    Float    @map("co2_ppm")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("air_readings")
+}
