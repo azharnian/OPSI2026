@@ -7,6 +7,7 @@
   --border: #d9e1e5;
   --nh3: #009a72;
   --co2: #2764d8;
+  --h2s: #9333ea;
   --warn: #d88916;
   --bad: #c54242;
   --shadow: 0 18px 48px rgba(31, 46, 55, 0.11);
@@ -94,7 +95,7 @@ h2 {
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 14px;
 }
@@ -133,6 +134,10 @@ h2 {
 
 .metric-co2 {
   border-top: 5px solid var(--co2);
+}
+
+.metric-h2s {
+  border-top: 5px solid var(--h2s);
 }
 
 .panel {
@@ -199,6 +204,10 @@ canvas {
 
 .line.co2 {
   background: var(--co2);
+}
+
+.line.h2s {
+  background: var(--h2s);
 }
 
 .grid {

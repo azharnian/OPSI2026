@@ -34,6 +34,13 @@
           </div>
           <span id="co2Status">Menunggu data</span>
         </article>
+        <article class="metric metric-h2s">
+          <div>
+            <p>H2S</p>
+            <strong><span id="h2sValue">--</span> ppm</strong>
+          </div>
+          <span id="h2sStatus">Menunggu data</span>
+        </article>
         <article class="metric">
           <div>
             <p>Update terakhir</p>
@@ -55,6 +62,7 @@
         <div class="legend">
           <span><i class="line nh3"></i>NH3</span>
           <span><i class="line co2"></i>CO2</span>
+          <span><i class="line h2s"></i>H2S</span>
         </div>
       </section>
 
@@ -70,6 +78,7 @@
             <div><span>Total</span><strong id="summaryCount">--</strong></div>
             <div><span>Rata-rata NH3</span><strong id="summaryNh3">--</strong></div>
             <div><span>Rata-rata CO2</span><strong id="summaryCo2">--</strong></div>
+            <div><span>Rata-rata H2S</span><strong id="summaryH2s">--</strong></div>
           </div>
         </article>
 
@@ -87,11 +96,12 @@
                   <th>Waktu</th>
                   <th>NH3</th>
                   <th>CO2</th>
+                  <th>H2S</th>
                 </tr>
               </thead>
               <tbody id="readingRows">
                 <tr>
-                  <td colspan="3">Belum ada data.</td>
+                  <td colspan="4">Belum ada data.</td>
                 </tr>
               </tbody>
             </table>

@@ -51,7 +51,7 @@ class SensorWorker:
             )
             print(
                 f"[{timestamp}] POST {status} "
-                f"nh3={payload['nh3_ppm']} ppm co2={payload['co2_ppm']} ppm"
+                f"nh3={payload['nh3_ppm']} ppm co2={payload['co2_ppm']} ppm h2s={payload['h2s_ppm']} ppm"
             )
             if status >= 400:
                 print(response_body)

@@ -7,17 +7,18 @@ function toNumber(value) {
 function parseReadingPayload(body) {
   const nh3Ppm = toNumber(body.nh3_ppm);
   const co2Ppm = toNumber(body.co2_ppm);
+  const h2sPpm = toNumber(body.h2s_ppm);
 
-  if (!Number.isFinite(nh3Ppm) || !Number.isFinite(co2Ppm)) {
+  if (!Number.isFinite(nh3Ppm) || !Number.isFinite(co2Ppm) || !Number.isFinite(h2sPpm)) {
     return {
       ok: false,
-      error: "Payload harus berisi nh3_ppm dan co2_ppm berupa angka.",
+      error: "Payload harus berisi nh3_ppm, co2_ppm, dan h2s_ppm berupa angka.",
     };
   }
 
   return {
     ok: true,
-    data: { nh3Ppm, co2Ppm },
+    data: { nh3Ppm, co2Ppm, h2sPpm },
   };
 }
 

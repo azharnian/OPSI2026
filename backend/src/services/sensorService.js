@@ -6,6 +6,7 @@ async function createReading(data) {
     data: {
       nh3Ppm: data.nh3Ppm,
       co2Ppm: data.co2Ppm,
+      h2sPpm: data.h2sPpm,
     },
   });
 
@@ -33,9 +34,9 @@ async function getReadingSummary() {
   const [count, aggregate] = await Promise.all([
     prisma.airReading.count(),
     prisma.airReading.aggregate({
-      _avg: { nh3Ppm: true, co2Ppm: true },
-      _min: { nh3Ppm: true, co2Ppm: true },
-      _max: { nh3Ppm: true, co2Ppm: true },
+      _avg: { nh3Ppm: true, co2Ppm: true, h2sPpm: true },
+      _min: { nh3Ppm: true, co2Ppm: true, h2sPpm: true },
+      _max: { nh3Ppm: true, co2Ppm: true, h2sPpm: true },
     }),
   ]);
 
@@ -50,6 +51,11 @@ async function getReadingSummary() {
       avg: aggregate._avg.co2Ppm,
       min: aggregate._min.co2Ppm,
       max: aggregate._max.co2Ppm,
+    },
+    h2s_ppm: {
+      avg: aggregate._avg.h2sPpm,
+      min: aggregate._min.h2sPpm,
+      max: aggregate._max.h2sPpm,
     },
   };
 }
