@@ -14,7 +14,7 @@ namespace Config {
 
   // Backend API
   // Ganti IP ini dengan IP laptop yang menjalankan backend Node/Bun.
-  const char* API_URL = "http://192.168.0.102:8080/api/sensors";
+  const char* API_URL = "http://192.168.0.102:8081/api/sensors";
   const uint16_t HTTP_TIMEOUT_MS = 5000;
   const unsigned long SEND_INTERVAL_MS = 5000;
 

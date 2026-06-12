@@ -112,9 +112,9 @@ function drawChart() {
   const maxValue = Math.max(10, ...values);
 
   context.clearRect(0, 0, width, height);
-  context.strokeStyle = "#d9e1e5";
+  context.strokeStyle = "rgba(255, 255, 255, 0.1)";
   context.lineWidth = 1;
-  context.fillStyle = "#67737b";
+  context.fillStyle = "#a1a1aa";
   context.font = "12px system-ui, sans-serif";
 
   for (let i = 0; i <= 4; i += 1) {
@@ -147,9 +147,9 @@ function drawChart() {
     context.stroke();
   }
 
-  drawLine("nh3_ppm", "#009a72");
-  drawLine("co2_ppm", "#2764d8");
-  drawLine("h2s_ppm", "#9333ea");
+  drawLine("nh3_ppm", "#34d399");
+  drawLine("co2_ppm", "#60a5fa");
+  drawLine("h2s_ppm", "#c084fc");
 }
 
 async function loadInitialData() {

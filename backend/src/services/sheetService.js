@@ -1,49 +1,86 @@
-import { PrismaClient } from '@prisma/client';
-import { google } from 'googleapis';
-import path from 'path';
+const { getSheets } = require("../lib/googleSheets");
+const { env } = require("../config/env");
+const { prisma } = require("../lib/prisma");
 
-const prisma = new PrismaClient();
+const SHEET_NAME = "Sheet1";
+const HEADER_ROW = ["Timestamp", "NH3 (ppm)", "CO2 (ppm)", "H2S (ppm)"];
 
-export async function exportToGoogleSheets() {
+/**
+ * Append satu baris data sensor ke Google Sheets.
+ * Dipanggil secara fire-and-forget setiap kali ada POST baru.
+ */
+async function appendRowToSheet(reading) {
+  if (!env.googleSpreadsheetId) {
+    console.warn("[Sheets] GOOGLE_SPREADSHEET_ID belum di-set, skip append.");
+    return;
+  }
+
   try {
-    // 1. Ambil data dari Prisma
-    const sensorData = await prisma.sensorLog.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100 
-    });
+    const sheets = await getSheets();
 
-    const rows = sensorData.map(data => [
-      data.createdAt.toISOString(),
-      data.nh3_ppm,
-      data.ch4_ppm, // Menggunakan ch4_ppm (atau co2_ppm sesuai skema DB Anda)
-      data.h2s_ppm
-    ]);
-
-    const spreadsheetData = [
-      ["Timestamp", "NH3 (ppm)", "CH4 (ppm)", "H2S (ppm)"],
-      ...rows
+    const row = [
+      reading.created_at
+        ? new Date(reading.created_at).toISOString()
+        : new Date().toISOString(),
+      reading.nh3_ppm,
+      reading.co2_ppm,
+      reading.h2s_ppm,
     ];
 
-    // 2. Autentikasi Menggunakan file credentials.json di root folder
-    const auth = new google.auth.GoogleAuth({
-      keyFile: path.join(process.cwd(), 'credentials.json'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: env.googleSpreadsheetId,
+      range: `${SHEET_NAME}!A:D`,
+      valueInputOption: "USER_ENTERED",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: { values: [row] },
     });
 
-    const sheets = google.sheets({ version: 'v4', auth });
-    
-    // 3. Ekspor ke Google Sheet menggunakan ID dari file .env
-    await sheets.spreadsheets.values.update({
-      spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
-      range: 'Sheet1!A1',
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values: spreadsheetData,
-      },
-    });
-
-    console.log('✅ Sinkronisasi Google Sheets berhasil!');
+    console.log("[Sheets] Baris baru berhasil ditambahkan.");
   } catch (error) {
-    console.error('❌ Gagal ekspor ke Google Sheets:', error);
+    console.error("[Sheets] Gagal append ke Google Sheets:", error.message);
   }
 }
+
+/**
+ * Full-sync: tulis ulang seluruh data dari database ke Google Sheets.
+ * Berguna untuk inisialisasi awal atau memperbaiki data yang tidak sinkron.
+ */
+async function syncAllToSheet() {
+  if (!env.googleSpreadsheetId) {
+    throw new Error("GOOGLE_SPREADSHEET_ID belum di-set di .env");
+  }
+
+  const sheets = await getSheets();
+
+  const allReadings = await prisma.airReading.findMany({
+    orderBy: { createdAt: "asc" },
+  });
+
+  const rows = allReadings.map((r) => [
+    r.createdAt.toISOString(),
+    r.nh3Ppm,
+    r.co2Ppm,
+    r.h2sPpm,
+  ]);
+
+  const values = [HEADER_ROW, ...rows];
+
+  // Hapus data lama di sheet terlebih dahulu
+  await sheets.spreadsheets.values.clear({
+    spreadsheetId: env.googleSpreadsheetId,
+    range: `${SHEET_NAME}`,
+  });
+
+  // Tulis ulang semua data
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: env.googleSpreadsheetId,
+    range: `${SHEET_NAME}!A1`,
+    valueInputOption: "USER_ENTERED",
+    requestBody: { values },
+  });
+
+  console.log(`[Sheets] Full sync selesai. ${allReadings.length} baris ditulis.`);
+  return { synced: allReadings.length };
+}
+
+module.exports = { appendRowToSheet, syncAllToSheet };

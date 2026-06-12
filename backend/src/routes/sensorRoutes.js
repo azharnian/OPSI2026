@@ -7,6 +7,7 @@ const {
   getReadingSummary,
   listReadings,
 } = require("../services/sensorService");
+const { appendRowToSheet, syncAllToSheet } = require("../services/sheetService");
 const { parseReadingPayload, parseReadingLimit } = require("../utils/requestParsers");
 
 const sensorRouter = express.Router();
@@ -24,9 +25,26 @@ sensorRouter.post("/", async (req, res, next) => {
     const reading = await createReading(parsed.data);
     publishReading(reading);
 
+    // Fire-and-forget: append ke Google Sheets tanpa memblokir response
+    appendRowToSheet(reading).catch((err) => {
+      console.error("[Sheets] Background append gagal:", err.message);
+    });
+
     return res.status(201).json({
       message: "Data sensor tersimpan.",
       data: reading,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+sensorRouter.post("/sync-sheets", async (_req, res, next) => {
+  try {
+    const result = await syncAllToSheet();
+    return res.json({
+      message: `Full sync selesai. ${result.synced} baris ditulis ke Google Sheets.`,
+      ...result,
     });
   } catch (error) {
     return next(error);
@@ -65,3 +83,4 @@ sensorRouter.get("/summary", async (_req, res, next) => {
 });
 
 module.exports = { sensorRouter };
+
