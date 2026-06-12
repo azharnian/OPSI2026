@@ -10,7 +10,7 @@ datasource db {
 model AirReading {
   id        Int      @id @default(autoincrement())
   nh3Ppm    Float    @map("nh3_ppm")
-  co2Ppm    Float    @map("co2_ppm")
+  ch4Ppm    Float    @map("ch4_ppm")
   h2sPpm    Float    @default(0.0) @map("h2s_ppm")
   createdAt DateTime @default(now()) @map("created_at")
 

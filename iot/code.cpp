@@ -20,7 +20,7 @@ namespace Config {
 
   // Sensor pins
   const int PIN_NH3 = 34;
-  const int PIN_CO2 = 33;
+  const int PIN_CH4 = 33;
 
   // ADC and sensor constants
   const float ADC_REF_VOLTAGE = 3.3;
@@ -29,13 +29,13 @@ namespace Config {
   const float MIN_VOLTAGE = 0.01;
   const float RL = 10000.0;
   const float R0_NH3 = 9000.0;
-  const float R0_CO2 = 10000.0;
+  const float R0_CH4 = 10000.0;
 
   // Kurva estimasi. Kalibrasi sensor sendiri akan lebih akurat.
   const float A_NH3 = 100.0;
   const float B_NH3 = -1.5;
-  const float A_CO2 = 200.0;
-  const float B_CO2 = -1.2;
+  const float A_CH4 = 200.0;
+  const float B_CH4 = -1.2;
 }
 
 // ============================================================
@@ -44,7 +44,7 @@ namespace Config {
 
 struct SensorReading {
   float nh3Ppm;
-  float co2Ppm;
+  float ch4Ppm;
 };
 
 // ============================================================
@@ -114,11 +114,11 @@ float calculatePpm(float voltage, float r0, float curveA, float curveB) {
 
 SensorReading readSensors() {
   float nh3Voltage = readVoltage(Config::PIN_NH3);
-  float co2Voltage = readVoltage(Config::PIN_CO2);
+  float ch4Voltage = readVoltage(Config::PIN_CH4);
 
   SensorReading reading;
   reading.nh3Ppm = calculatePpm(nh3Voltage, Config::R0_NH3, Config::A_NH3, Config::B_NH3);
-  reading.co2Ppm = calculatePpm(co2Voltage, Config::R0_CO2, Config::A_CO2, Config::B_CO2);
+  reading.ch4Ppm = calculatePpm(ch4Voltage, Config::R0_CH4, Config::A_CH4, Config::B_CH4);
 
   return reading;
 }
@@ -130,7 +130,7 @@ SensorReading readSensors() {
 String buildPayload(const SensorReading& reading) {
   String payload = "{";
   payload += "\"nh3_ppm\":" + String(reading.nh3Ppm, 2) + ",";
-  payload += "\"co2_ppm\":" + String(reading.co2Ppm, 2);
+  payload += "\"ch4_ppm\":" + String(reading.ch4Ppm, 2);
   payload += "}";
   return payload;
 }
@@ -174,8 +174,8 @@ void printReading(const SensorReading& reading) {
   Serial.print("NH3: ");
   Serial.print(reading.nh3Ppm);
   Serial.println(" ppm");
-  Serial.print("CO2: ");
-  Serial.print(reading.co2Ppm);
+  Serial.print("CH4: ");
+  Serial.print(reading.ch4Ppm);
   Serial.println(" ppm");
   Serial.println("================================");
 }

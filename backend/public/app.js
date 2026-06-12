@@ -5,10 +5,10 @@ const elements = {
   connection: document.getElementById("connection"),
   connectionText: document.getElementById("connectionText"),
   nh3Value: document.getElementById("nh3Value"),
-  co2Value: document.getElementById("co2Value"),
+  ch4Value: document.getElementById("ch4Value"),
   h2sValue: document.getElementById("h2sValue"),
   nh3Status: document.getElementById("nh3Status"),
-  co2Status: document.getElementById("co2Status"),
+  ch4Status: document.getElementById("ch4Status"),
   h2sStatus: document.getElementById("h2sStatus"),
   lastSeen: document.getElementById("lastSeen"),
   readingCount: document.getElementById("readingCount"),
@@ -47,7 +47,7 @@ function setConnection(state, text) {
 
 function getAirStatus(type, value) {
   if (!Number.isFinite(value)) return "Menunggu data";
-  if (type === "co2") {
+  if (type === "ch4") {
     if (value < 800) return "Normal";
     if (value < 1200) return "Perlu ventilasi";
     return "Tinggi";
@@ -65,10 +65,10 @@ function getAirStatus(type, value) {
 
 function updateMetric(reading) {
   elements.nh3Value.textContent = formatNumber(reading.nh3_ppm);
-  elements.co2Value.textContent = formatNumber(reading.co2_ppm);
+  elements.ch4Value.textContent = formatNumber(reading.ch4_ppm);
   elements.h2sValue.textContent = formatNumber(reading.h2s_ppm);
   elements.nh3Status.textContent = getAirStatus("nh3", reading.nh3_ppm);
-  elements.co2Status.textContent = getAirStatus("co2", reading.co2_ppm);
+  elements.ch4Status.textContent = getAirStatus("ch4", reading.ch4_ppm);
   elements.h2sStatus.textContent = getAirStatus("h2s", reading.h2s_ppm);
   elements.lastSeen.textContent = formatDate(reading.created_at);
 }
@@ -87,7 +87,7 @@ function updateTable() {
         <tr>
           <td>${formatDate(reading.created_at)}</td>
           <td>${formatNumber(reading.nh3_ppm)}</td>
-          <td>${formatNumber(reading.co2_ppm)}</td>
+          <td>${formatNumber(reading.ch4_ppm)}</td>
           <td>${formatNumber(reading.h2s_ppm)}</td>
         </tr>
       `;
@@ -108,7 +108,7 @@ function drawChart() {
   const padding = { top: 22, right: 22, bottom: 30, left: 48 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
-  const values = readings.flatMap((reading) => [reading.nh3_ppm, reading.co2_ppm, reading.h2s_ppm]);
+  const values = readings.flatMap((reading) => [reading.nh3_ppm, reading.ch4_ppm, reading.h2s_ppm]);
   const maxValue = Math.max(10, ...values);
 
   context.clearRect(0, 0, width, height);
@@ -148,7 +148,7 @@ function drawChart() {
   }
 
   drawLine("nh3_ppm", "#34d399");
-  drawLine("co2_ppm", "#60a5fa");
+  drawLine("ch4_ppm", "#60a5fa");
   drawLine("h2s_ppm", "#c084fc");
 }
 
@@ -172,7 +172,7 @@ async function loadInitialData() {
     const payload = await summaryResponse.json();
     elements.summaryCount.textContent = payload.count;
     elements.summaryNh3.textContent = `${formatNumber(payload.nh3_ppm.avg)} ppm`;
-    elements.summaryCo2.textContent = `${formatNumber(payload.co2_ppm.avg)} ppm`;
+    elements.summaryCo2.textContent = `${formatNumber(payload.ch4_ppm.avg)} ppm`;
     elements.summaryH2s.textContent = `${formatNumber(payload.h2s_ppm.avg)} ppm`;
   }
 }
@@ -183,7 +183,7 @@ async function refreshSummary() {
   const payload = await response.json();
   elements.summaryCount.textContent = payload.count;
   elements.summaryNh3.textContent = `${formatNumber(payload.nh3_ppm.avg)} ppm`;
-  elements.summaryCo2.textContent = `${formatNumber(payload.co2_ppm.avg)} ppm`;
+  elements.summaryCo2.textContent = `${formatNumber(payload.ch4_ppm.avg)} ppm`;
   elements.summaryH2s.textContent = `${formatNumber(payload.h2s_ppm.avg)} ppm`;
 }
 

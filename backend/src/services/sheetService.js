@@ -3,7 +3,7 @@ const { env } = require("../config/env");
 const { prisma } = require("../lib/prisma");
 
 const SHEET_NAME = "Sheet1";
-const HEADER_ROW = ["Timestamp", "NH3 (ppm)", "CO2 (ppm)", "H2S (ppm)"];
+const HEADER_ROW = ["Timestamp", "NH3 (ppm)", "CH4 (ppm)", "H2S (ppm)"];
 
 /**
  * Append satu baris data sensor ke Google Sheets.
@@ -23,7 +23,7 @@ async function appendRowToSheet(reading) {
         ? new Date(reading.created_at).toISOString()
         : new Date().toISOString(),
       reading.nh3_ppm,
-      reading.co2_ppm,
+      reading.ch4_ppm,
       reading.h2s_ppm,
     ];
 
@@ -59,7 +59,7 @@ async function syncAllToSheet() {
   const rows = allReadings.map((r) => [
     r.createdAt.toISOString(),
     r.nh3Ppm,
-    r.co2Ppm,
+    r.ch4Ppm,
     r.h2sPpm,
   ]);
 

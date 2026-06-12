@@ -116,7 +116,7 @@ Content-Type: application/json
 
 {
   "nh3_ppm": 12.5,
-  "co2_ppm": 450.25
+  "ch4_ppm": 450.25
 }
 ```
 

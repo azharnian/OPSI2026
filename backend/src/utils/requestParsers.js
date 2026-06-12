@@ -6,19 +6,19 @@ function toNumber(value) {
 
 function parseReadingPayload(body) {
   const nh3Ppm = toNumber(body.nh3_ppm);
-  const co2Ppm = toNumber(body.co2_ppm);
+  const ch4Ppm = toNumber(body.ch4_ppm);
   const h2sPpm = toNumber(body.h2s_ppm);
 
-  if (!Number.isFinite(nh3Ppm) || !Number.isFinite(co2Ppm) || !Number.isFinite(h2sPpm)) {
+  if (!Number.isFinite(nh3Ppm) || !Number.isFinite(ch4Ppm) || !Number.isFinite(h2sPpm)) {
     return {
       ok: false,
-      error: "Payload harus berisi nh3_ppm, co2_ppm, dan h2s_ppm berupa angka.",
+      error: "Payload harus berisi nh3_ppm, ch4_ppm, dan h2s_ppm berupa angka.",
     };
   }
 
   return {
     ok: true,
-    data: { nh3Ppm, co2Ppm, h2sPpm },
+    data: { nh3Ppm, ch4Ppm, h2sPpm },
   };
 }
 
