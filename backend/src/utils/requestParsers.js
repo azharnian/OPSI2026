@@ -7,12 +7,12 @@ function toNumber(value) {
 function parseReadingPayload(body) {
   const nh3Ppm = toNumber(body.nh3_ppm);
   const ch4Ppm = toNumber(body.ch4_ppm);
-  const h2sPpm = toNumber(body.h2s_ppm);
+  const h2sPpm = body.h2s_ppm !== undefined ? toNumber(body.h2s_ppm) : 0;
 
   if (!Number.isFinite(nh3Ppm) || !Number.isFinite(ch4Ppm) || !Number.isFinite(h2sPpm)) {
     return {
       ok: false,
-      error: "Payload harus berisi nh3_ppm, ch4_ppm, dan h2s_ppm berupa angka.",
+      error: "Payload setidaknya harus berisi nh3_ppm dan ch4_ppm berupa angka.",
     };
   }
 
