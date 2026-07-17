@@ -16,3 +16,5 @@ Two models share the same preprocessing pipeline for fair comparison:
 
 1. **XGBoost** (baseline) — with GridSearchCV hyperparameter tuning
 2. **ANN** (TensorFlow/Keras) — with EarlyStopping and learning rate scheduling
+
+AI Repository: [https://github.com/Georgearr/ai-opsi-2026](https://github.com/Georgearr/ai-opsi-2026)
